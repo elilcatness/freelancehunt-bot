@@ -77,4 +77,4 @@ def main():
 
 if __name__ == '__main__':
     db_session.global_init(os.path.join('db', 'mailings.db'))
-    # main()
+    main()
