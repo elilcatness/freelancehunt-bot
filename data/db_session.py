@@ -8,7 +8,7 @@ __factory = None
 
 
 def global_init(url):
-    url = url.strip()
+    url = url.strip().replace('postgres', 'postgresql')
     global __factory
     if __factory:
         return
