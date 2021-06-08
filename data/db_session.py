@@ -14,8 +14,8 @@ def global_init(url):
         return
     if not url:
         raise Exception('Некорректный адрес БД')
-    engine = create_engine(url, echo=False)
-    __factory = sessionmaker(bind=engine, poolclass=NullPool)
+    engine = create_engine(url, echo=False, poolclass=NullPool)
+    __factory = sessionmaker(bind=engine)
     from . import __all_models
     SqlAlchemyBase.metadata.create_all(engine)
 
