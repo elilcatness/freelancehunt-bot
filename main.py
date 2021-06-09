@@ -17,6 +17,7 @@ def job(context):
     parser = context.job.context.user_data['parser']
     updates = parser.get_updates(mail.last_id)
     if updates:
+        print(f'last update: {updates[0]}', end='\n\n')
         mail.last_id = updates[0]['id']
         session.merge(mail)
         session.commit()
