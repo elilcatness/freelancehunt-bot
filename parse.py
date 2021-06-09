@@ -9,7 +9,7 @@ from humanize import precisedelta
 class FreelanceHunt:
     def __init__(self, token):
         # logging.basicConfig(filename='logs.log', format='%(asctime)s %(message)s', encoding='utf-8')
-        self.url = 'https://api.freelancehunt.com/v2/projects?only_my_skills=1'
+        self.url = 'https://api.freelancehunt.com/v2/projects?filter[only_my_skills]=1'
         self.headers = {'Authorization': 'Bearer %s' % token,
                         'Content-Type': 'application/json'}
 
