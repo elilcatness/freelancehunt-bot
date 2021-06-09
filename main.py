@@ -1,7 +1,6 @@
 import os
 from datetime import timedelta
 
-from dotenv import load_dotenv
 from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import Updater, CommandHandler, CallbackContext
 from telegram.parsemode import ParseMode
@@ -79,7 +78,5 @@ def main():
 
 
 if __name__ == '__main__':
-    # db_session.global_init(os.getenv('DATABASE_URL'))
-    load_dotenv()
-    db_session.global_init('sqlite:///db/mailings.db?check_same_thread=False')
+    db_session.global_init(os.getenv('DATABASE_URL'))
     main()
