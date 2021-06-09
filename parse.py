@@ -1,5 +1,4 @@
 import json
-import logging
 from datetime import datetime, timedelta
 from json import JSONDecodeError
 
@@ -9,7 +8,7 @@ from humanize import precisedelta
 
 class FreelanceHunt:
     def __init__(self, token):
-        logging.basicConfig(filename='logs.log', format='%(asctime)s %(message)s', encoding='utf-8')
+        # logging.basicConfig(filename='logs.log', format='%(asctime)s %(message)s', encoding='utf-8')
         self.url = 'https://api.freelancehunt.com/v2/projects?only_my_skills=1'
         self.headers = {'Authorization': 'Bearer %s' % token,
                         'Content-Type': 'application/json'}
@@ -17,13 +16,13 @@ class FreelanceHunt:
     def get_updates(self, last_id):
         response = requests.get(self.url, headers=self.headers)
         if not response:
-            return logging.warning('Failed to get updates')
+            return print('Failed to get updates')
+            # return logging.warning('Failed to get updates')
         try:
             data = response.json()
         except JSONDecodeError:
-            return logging.warning('Failed to decode a JSON')
-        with open('response.json', 'w', encoding='utf-8') as f:
-            f.write(json.dumps(data))
+            return print('Failed to decode a JSON')
+            # return logging.warning('Failed to decode a JSON')
         output = []
         for project in data['data']:
             if project['id'] == last_id:
