@@ -13,7 +13,7 @@ class FreelanceHunt:
         self.headers = {'Authorization': 'Bearer %s' % token,
                         'Content-Type': 'application/json'}
 
-    def get_updates(self, last_id):
+    def get_updates(self, last_id=None):
         response = requests.get(self.url, headers=self.headers)
         if not response:
             return print('Failed to get updates')
@@ -25,7 +25,7 @@ class FreelanceHunt:
             # return logging.warning('Failed to decode a JSON')
         output = []
         for project in data['data']:
-            if project['id'] == last_id:
+            if last_id and project['id'] == last_id:
                 break
             attrs = project['attributes']
             if (attrs.get('status', {}).get('name') != 'Прием ставок'
