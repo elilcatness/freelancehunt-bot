@@ -19,7 +19,8 @@ def job(context):
     updates = parser.get_updates(mail.projects[-1].id if mail.projects else None)
     if updates:
         new_projects = [upd['id'] for upd in updates if upd['id'] not in [p.id for p in mail.projects]]
-        mail.projects.extend(new_projects)
+        for p_id in new_projects:
+            mail.projects.append(Project(id=p_id))
         if len(mail.projects) - 10 > 0:
             for _ in range(len(mail.projects) - 10):
                 session.delete(mail.projects.pop(0))
