@@ -18,15 +18,14 @@ def job(context):
     parser = context.job.context.user_data['parser']
     updates = parser.get_updates(mail.projects[-1].id if mail.projects else None)
     if updates:
-        new_projects = [Project(id=upd['id']) for upd in updates if upd['id']
-                        not in [p.id for p in mail.projects]]
+        new_projects = [upd['id'] for upd in updates if upd['id'] not in [p.id for p in mail.projects]]
         mail.projects.extend(new_projects)
         if len(mail.projects) - 10 > 0:
             for _ in range(len(mail.projects) - 10):
-                mail.projects.pop(0)
+                session.delete(mail.projects.pop(0))
         session.merge(mail)
         session.commit()
-    for update in filter(lambda x: x['id'] in [p.id for p in new_projects], updates[::-1]):
+    for update in filter(lambda x: x['id'] in new_projects, updates[::-1]):
         message = '\n'.join([f'<b>{key}</b>: {val}' for key, val in list(update.items())[2:]])
         markup = InlineKeyboardMarkup([[InlineKeyboardButton('Открыть', url=update['url'])]])
         bot.send_message(mail.id, message, parse_mode=ParseMode.HTML,
