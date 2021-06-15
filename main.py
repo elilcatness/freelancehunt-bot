@@ -21,7 +21,7 @@ def job(context):
         new_projects = [upd['id'] for upd in updates if upd['id'] not in [p.id for p in mail.projects]]
         for p_id in new_projects:
             mail.projects.append(Project(id=p_id))
-        if len(mail.projects) - 10 > 0:
+        if len(mail.projects) - 30 > 0:
             for _ in range(len(mail.projects) - 10):
                 session.delete(mail.projects.pop(0))
         session.merge(mail)
