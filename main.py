@@ -18,7 +18,7 @@ def job(context):
     parser = context.job.context.user_data['parser']
     updates = parser.get_updates(mail.projects[-1].id if mail.projects else None)
     if updates:
-        new_projects = [upd['id'] for upd in updates if upd['id'] not in [p.id for p in mail.projects]]
+        new_projects = [upd['id'] for upd in updates if upd['id'] not in [p.fh_id for p in mail.projects]]
         for p_id in new_projects:
             mail.projects.append(Project(fh_id=p_id))
         if len(mail.projects) - 30 > 0:
