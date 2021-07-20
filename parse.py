@@ -12,20 +12,19 @@ class FreelanceHunt:
         self.url = 'https://api.freelancehunt.com/v2/projects?filter[only_my_skills]=1'
         self.headers = {'Authorization': 'Bearer %s' % token,
                         'Content-Type': 'application/json'}
+        self.last_id = None
 
-    def get_updates(self, last_id=None):
+    def get_updates(self):
         response = requests.get(self.url, headers=self.headers)
         if not response:
             return print('Failed to get updates')
-            # return logging.warning('Failed to get updates')
         try:
             data = response.json()
         except JSONDecodeError:
             return print('Failed to decode a JSON')
-            # return logging.warning('Failed to decode a JSON')
         output = []
         for project in data['data']:
-            if last_id and project['id'] == last_id:
+            if project['id'] == self.last_id:
                 break
             attrs = project['attributes']
             if (attrs.get('status', {}).get('name') != 'Прием ставок'
@@ -47,4 +46,9 @@ class FreelanceHunt:
                 datetime.utcnow() + timedelta(hours=int(delta.split(':')[0])) - published,
                 format='%0.f') + ' ago'
             output.append(current)
+        if output:
+            self.last_id = output[0]['id']
         return output
+
+    def get_last_id(self):
+        return self.last_id

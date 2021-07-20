@@ -7,7 +7,6 @@ from telegram.parsemode import ParseMode
 
 from data import db_session
 from data.mailing import Mail
-from data.project import Project
 from parse import FreelanceHunt
 
 
@@ -16,17 +15,12 @@ def job(context):
     session = db_session.create_session()
     mail = session.query(Mail).get(context.job.context.user_data['chat_id'])
     parser = context.job.context.user_data['parser']
-    updates = parser.get_updates(mail.projects[-1].id if mail.projects else None)
+    updates = parser.get_updates()
     if updates:
-        new_projects = [upd['id'] for upd in updates if upd['id'] not in [p.fh_id for p in mail.projects]]
-        for p_id in new_projects:
-            mail.projects.append(Project(fh_id=p_id))
-        if len(mail.projects) - 30 > 0:
-            for _ in range(len(mail.projects) - 30):
-                session.delete(mail.projects.pop(0))
+        mail.last_id = parser.get_last_id()
         session.merge(mail)
         session.commit()
-    for update in filter(lambda x: x['id'] in new_projects, updates[::-1]):
+    for update in updates:
         message = '\n'.join([f'<b>{key}</b>: {val}' for key, val in list(update.items())[2:]])
         markup = InlineKeyboardMarkup([[InlineKeyboardButton('Открыть', url=update['url'])]])
         bot.send_message(mail.id, message, parse_mode=ParseMode.HTML,
@@ -58,8 +52,6 @@ def stop(update, context):
         return update.message.reply_text('Рассылка не была включена')
     for job in context.job_queue.get_jobs_by_name(str(chat_id)):
         job.schedule_removal()
-    for project in mail.projects:
-        session.delete(project)
     session.delete(mail)
     session.commit()
     update.message.reply_text('Рассылка была успешно выключена')
