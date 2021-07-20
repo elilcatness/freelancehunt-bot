@@ -48,7 +48,7 @@ class FreelanceHunt:
             output.append(current)
         if output:
             self.last_id = output[0]['id']
-        return output
+        return output[::-1]
 
     def get_last_id(self):
         return self.last_id

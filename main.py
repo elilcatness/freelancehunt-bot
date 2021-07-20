@@ -40,7 +40,7 @@ def start(update: Update, context: CallbackContext):
     context.user_data['parser'] = FreelanceHunt(os.getenv('fh_token'))
     context.user_data['chat_id'] = chat_id
     update.message.reply_text('Рассылка успешно включена')
-    context.job_queue.run_repeating(job, timedelta(seconds=120), timedelta(seconds=1),
+    context.job_queue.run_repeating(job, timedelta(seconds=180), timedelta(seconds=1),
                                     context=context, name=str(chat_id))
 
 
