@@ -15,7 +15,7 @@ def job(context):
     session = db_session.create_session()
     mail = session.query(Mail).get(context.job.context.user_data['chat_id'])
     parser = context.job.context.user_data['parser']
-    updates = parser.get_updates()
+    updates = parser.get_updates(last_id=mail.last_id)
     if updates:
         mail.last_id = updates[-1]['id']
         session.merge(mail)
