@@ -22,7 +22,7 @@ class FreelanceHunt:
         except JSONDecodeError:
             return print('Failed to decode a JSON')
         output = []
-        for project in data['data']:
+        for project in data['data'][:1]:
             if project['id'] == last_id:
                 break
             attrs = project['attributes']
