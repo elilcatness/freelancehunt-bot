@@ -23,7 +23,7 @@ class FreelanceHunt:
             return print('Failed to decode a JSON')
         output = []
         for project in data['data']:
-            if project['id'] == last_id:
+            if last_id and project['id'] <= last_id:
                 break
             attrs = project['attributes']
             if (attrs.get('status', {}).get('name') != 'Прием ставок'
