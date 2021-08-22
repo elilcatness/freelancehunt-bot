@@ -38,6 +38,10 @@ def job(context):
             [[InlineKeyboardButton('Открыть', url=MAILBOX_URL)]])
         bot.send_message(mail.id, f'У вас {unread_threads} непрочитанных диалогов',
                          reply_markup=markup)
+    mail.unread_threads_count = unread_threads
+    mail.messages_count = messages_count
+    session.merge(mail)
+    session.commit()
     session.close()
 
 
