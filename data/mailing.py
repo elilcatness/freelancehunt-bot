@@ -8,5 +8,5 @@ class Mail(SqlAlchemyBase):
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     last_id = Column(Integer)
-    unread_threads_count = Column(Integer)
-    messages_count = Column(Integer)
+    unread_threads_count = Column(Integer, default=0)
+    messages_count = Column(Integer, default=0)
