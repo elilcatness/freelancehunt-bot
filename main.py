@@ -9,7 +9,6 @@ from data import db_session
 from data.mailing import Mail
 from parse import FreelanceHunt
 
-
 MAILBOX_URL = 'https://freelancehunt.com/mailbox'
 
 
@@ -32,7 +31,7 @@ def job(context):
                          disable_web_page_preview=True,
                          reply_markup=markup)
     unread_threads, messages_count = parser.get_messages()
-    if (unread_threads > 0 and mail.unread_threads_count >= unread_threads
+    if (0 < mail.unread_threads_count >= unread_threads
             and messages_count > mail.messages_count):
         markup = InlineKeyboardMarkup(
             [[InlineKeyboardButton('Открыть', url=MAILBOX_URL)]])
