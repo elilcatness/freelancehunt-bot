@@ -7,20 +7,24 @@ from humanize import precisedelta
 
 
 class FreelanceHunt:
+    api_url = 'https://api.freelancehunt.com/v2'
+    projects_url = '/projects?filter[only_my_skills]=1'
+    
     def __init__(self, token):
-        # logging.basicConfig(filename='logs.log', format='%(asctime)s %(message)s', encoding='utf-8')
-        self.url = 'https://api.freelancehunt.com/v2/projects?filter[only_my_skills]=1'
         self.headers = {'Authorization': 'Bearer %s' % token,
                         'Content-Type': 'application/json'}
 
-    def get_updates(self, last_id=None):
-        response = requests.get(self.url, headers=self.headers)
+    def get_response_json(self, url):
+        response = requests.get(url, headers=self.headers)
         if not response:
-            return print('Failed to get updates')
+            return print(f'Failed to get {url}')
         try:
-            data = response.json()
+            return response.json()
         except JSONDecodeError:
-            return print('Failed to decode a JSON')
+            return print(f'Failed to decode a JSON received from {url}')
+
+    def get_updates(self, last_id=None):
+        data = self.get_response_json(self.api_url + self.projects_url)
         output = []
         for project in data['data']:
             if last_id and project['id'] <= last_id:
