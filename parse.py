@@ -1,6 +1,3 @@
-import os
-from dotenv import load_dotenv
-import json
 from datetime import datetime, timedelta
 from json import JSONDecodeError
 
@@ -75,13 +72,3 @@ class FreelanceHunt:
                 format='%0.f') + ' ago'
             output.append(current)
         return output[::-1]
-
-
-def main():
-    fh = FreelanceHunt(os.getenv('fh_token'))
-    print(fh.get_messages())
-
-
-if __name__ == '__main__':
-    load_dotenv()
-    main()

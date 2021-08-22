@@ -10,21 +10,33 @@ from data.mailing import Mail
 from parse import FreelanceHunt
 
 
+MAILBOX_URL = 'https://freelancehunt.com/mailbox'
+
+
 def job(context):
     bot = context.job.context.bot
     session = db_session.create_session()
     mail = session.query(Mail).get(context.job.context.user_data['chat_id'])
-    parser = context.job.context.user_data['parser']
+    parser: FreelanceHunt = context.job.context.user_data['parser']
     updates = parser.get_updates(last_id=mail.last_id)
     if updates:
         mail.last_id = updates[-1]['id']
         session.merge(mail)
         session.commit()
     for update in updates:
-        message = '\n'.join([f'<b>{key}</b>: {val}' for key, val in list(update.items())[2:]])
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton('Открыть', url=update['url'])]])
+        message = '\n'.join(
+            [f'<b>{key}</b>: {val}' for key, val in list(update.items())[2:]])
+        markup = InlineKeyboardMarkup(
+            [[InlineKeyboardButton('Открыть', url=update['url'])]])
         bot.send_message(mail.id, message, parse_mode=ParseMode.HTML,
                          disable_web_page_preview=True,
+                         reply_markup=markup)
+    unread_threads, messages_count = parser.get_messages()
+    if (unread_threads > 0 and mail.unread_threads_count >= unread_threads
+            and messages_count > mail.messages_count):
+        markup = InlineKeyboardMarkup(
+            [[InlineKeyboardButton('Открыть', url=MAILBOX_URL)]])
+        bot.send_message(mail.id, f'У вас {unread_threads} непрочитанных диалогов',
                          reply_markup=markup)
     session.close()
 
